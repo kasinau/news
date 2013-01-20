@@ -58,11 +58,48 @@ class DataBase
         }
     }
 
+    public function getCategoryID()
+    {
+        try {
+            $query = $this->dbh->prepare('SELECT id
+                FROM Category
+                WHERE category_name = :category_name');
+            $query->bindParam(':category_name', $_POST['category_name']);
+            $query->execute();
+            if ($query) {
+                return $query->fetch();
+            } else {
+                $this->insertCategory();
+                return $this->getID();
+            }
+        }
+        catch (PDOException $e){
+            $this->setError($e->getMessage(), 'Can not get news...');
+        }
+    }
+
+    public function getLastNews()
+    {
+        try {
+            $query = $this->dbh->query('SELECT *
+                FROM News, Photo
+                WHERE News.news_id = Photo.news_id
+                ORDER BY date
+                LIMIT 10');
+            return $query->fetch();
+        } catch (PDOException $e){
+            $this->setError($e->getMessage(), 'Can not get the ID...');
+        }
+    }
+
     public function getNewsByID($id)
     {
         try {
-            $query = $this->dbh->prepare('SELECT * FROM News, Category
-                WHERE news_id = :news_id AND News.category_id = Category.category_id');
+            $query = $this->dbh->prepare('SELECT *
+                FROM News, Category, Photo
+                WHERE news_id = :news_id
+                    AND News.category_id = Category.category_id
+                    AND News.news_id = Photo.news_id');
             $query->bindParam(':news_id', $id);
             $query->execute();
             return $query->fetch();
@@ -75,57 +112,16 @@ class DataBase
     public function getNewsByCategoryID($id)
     {
         try {
-            $query = $this->dbh->prepare('SELECT * FROM News
-                WHERE category_id = :category_id');
+            $query = $this->dbh->prepare('SELECT *
+                FROM News, Photo
+                WHERE category_id = :category_id
+                    AND News.news_id = Photo.news_id
+                ORDER BY date');
             $query->bindParam(':category_id', $id);
             $query->execute();
             return $query->fetch();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not get news...');
-        }
-    }
-
-    public function getCountriesIdentifiers()
-    {
-        try {
-            $query = $this->dbh->query('call getCountriesIdentifiers()');
-            return $query->fetchAll();
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), "Can not to get countries' identifiers...");
-        }
-    }
-
-    public function getContent()
-    {
-        try {
-            $query = $this->dbh->query('call getContent()');
-            return $query->fetchAll();
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not get content...');
-        }
-    }
-
-    public function getTreatyDetails($treatyID)
-    {
-        try {
-            $query = $this->dbh->prepare('call getTreatyDetails(:treatyID)');
-            $query->bindParam(':treatyID', $treatyID);
-            $query->execute();
-            return $query;
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not get the treaty details...');
-        }
-    }
-
-    public function getTreaty($treatyID)
-    {
-        try {
-            $query = $this->dbh->prepare('call getTreaty(:treatyID)');
-            $query->bindParam(':treatyID', $treatyID);
-            $query->execute();
-            return $query;
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not get the treaty...');
         }
     }
 
@@ -143,120 +139,68 @@ class DataBase
     }
 
 
-    public function insertChapter($chapterNo, $chapterName)
-    {
-        try {
-            $query = $this->dbh->prepare('call insertChapter(:chapterNo, :chapterName)');
-            $query->bindParam(':chapterNo', $chapterNo);
-            $query->bindParam(':chapterName', $chapterName);
-            $query->execute();
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not insert chapter...');
-        }
-    }
-
-
-    public function insertUser($username, $password)
+    public function insertUser()
     {
         try {
             $query = $this->dbh->prepare('call insertUser(:username, :password)');
-            $query->bindParam(':username', $username);
-            $query->bindParam(':password', md5($password));
+            $query->bindParam(':username', $_POST['username']);
+            $query->bindParam(':password', md5($_POST['password']));
             $query->execute();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not insert the user...');
         }
     }
 
-    public function insertCountry($countryName, $countryIdentifier)
+
+    public function insertCategory()
     {
         try {
-            $query = $this->dbh->prepare("call insertCountry(:countryName, :countryIdentifier)");
-            $query->bindParam(":countryName", $countryName);
-            $query->bindParam(":countryIdentifier", $countryIdentifier);
+            $query = $this->dbh->prepare('INSERT INTO Category(category_name)
+                VALUES(category_name)');
+            $query->bindParam(':category_name', $_POST['category_name']);
             $query->execute();
         } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not insert country...');
+            $this->setError($e->getMessage(), 'Can not insert category...');
         }
     }
 
-    public function insertCountryIdentifier($countryIdentifier, $countryName)
+    public function insertNews($category_id)
     {
         try {
-            $query = $this->dbh->prepare("call insertCountryIdentifier(:countryIdentifier, :countryName)");
-            $query->bindParam(":countryIdentifier", $countryIdentifier);
-            $query->bindParam(":countryName", $countryName);
-            $query->execute();
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not insert country identifier...');
-        }
-    }
-
-    public function insertTreaty($chapterID, $title, $conclusionDate, $conclusionPlace, $EFDate,
-                                 $EFText, $registrationDate, $registrationNo, $treatyText, $fullTreatyText, $note)
-    {
-        try {
-            $query = $this->dbh->prepare('call insertTreaty(:chapterID, :title, :conclusionDate,
-                                :conclusionPlace, :EFDate, :EFText, :registrationDate, :registrationNo,
-                                :treatyText, :fullTreatyText, :note)');
-            $query->bindParam(':chapterID', $chapterID);
-            $query->bindParam(':title', $title);
-            $query->bindParam(':conclusionDate', $conclusionDate);
-            $query->bindParam(':conclusionPlace', $conclusionPlace);
-            $query->bindParam(':EFDate', $EFDate);
-            $query->bindParam(':EFText', $EFText);
-            $query->bindParam(':registrationDate', $registrationDate);
-            $query->bindParam(':registrationNo', $registrationNo);
-            $query->bindParam(':treatyText', $treatyText);
-            $query->bindParam(':fullTreatyText', $fullTreatyText);
-            $query->bindParam(':note', $note);
+            $query = $this->dbh->prepare('INSERT INTO News(category_id, title, content, date)
+                VALUES(:category_id, :title, :content, :date)');
+            $query->bindParam(':category_id', $category_id);
+            $query->bindParam(':title', $_POST['title']);
+            $query->bindParam(':content', $_POST['content']);
+            $query->bindParam(':date', $this->getDate());
             $query->execute();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not insert treaty...');
         }
     }
 
-    public function checkCTreaty($treatyID, $countryID)
+    public function insertPhoto($news_id)
     {
         try {
-            $query = $this->dbh->prepare('call checkCTreaty(:treatyID, :countryID)');
-            $query->bindParam(':treatyID', $treatyID);
-            $query->bindParam(':countryID', $countryID);
+            $ext = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
+            $photo = "photo/" . ($_POST['category']) . '_' . $_POST['title']) . '_' . time() . "." . $ext;
+
+            $query = $this->dbh->prepare('INSERT INTO Photo(news_id, photo)' .
+                'VALUES(:news_id, :photo)');
+            $query->bindParam(':news_id', $news_id);
+            $query->bindParam(':photo', $photo);
             $query->execute();
-            return $query->fetch();
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not check treaty...');
+            move_uploaded_file($_FILES["photo"]["tmp_name"], $photo);
+            return true;
+        }
+        catch (PDOException $e){
+            $this->setError($e->getMessage(), 'Can not insert photo...please, try again later...');
         }
     }
 
-    public function insertCTreaty($treatyID, $countryID, $signature, $ratification, $details)
+    public function getDate()
     {
-        try {
-            $query = $this->dbh->prepare('call insertCTreaty(:treatyID, :countryID,
-                                :signature, :ratification, :details)');
-            $query->bindParam(':treatyID', $treatyID);
-            $query->bindParam(':countryID', $countryID);
-            $query->bindParam(':signature', $signature);
-            $query->bindParam(':ratification', $ratification);
-            $query->bindParam(':details', $details);
-            $query->execute();
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not insert cTreaty...');
-        }
-    }
-
-    public function updateCTreaty($cTreatyID, $signature, $ratification, $details)
-    {
-        try {
-            $query = $this->dbh->prepare('call updateCTreaty(:cTreatyID, :signature, :ratification, :details)');
-            $query->bindParam(':cTreatyID', $cTreatyID);
-            $query->bindParam(':signature', $signature);
-            $query->bindParam(':ratification', $ratification);
-            $query->bindParam(':details', $details);
-            $query->execute();
-        } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not update treaty...');
-        }
+        return 1;
     }
 
     public function setError($error, $errorMessage = '')
