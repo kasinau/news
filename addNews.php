@@ -2,6 +2,8 @@
 <head>
     <title>News</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <script src="http://code.jquery.com/jquery.min.js"></script>
+    <script src="js/addNews.js"></script>
 </head>
 <body>
 <div id="container">
@@ -18,39 +20,56 @@
         <div class="menu_cell"><a href="#">Acasa</a> </div>
         <div class="menu_cell"><a href="#">Acasa</a> </div>
         <div class="menu_cell"><a href="#">Acasa</a> </div>
-        <div class="menu_cell"><a href="#">Adauga o stire</a> </div>
+        <div class="menu_cell"><a href="addNews.php">Adauga o stire</a> </div>
     </div>
-    <div id="content">
-        <form action="form.php" method="post" enctype="multipart/form-data" name="registrationForm" id="registrationForm">
-            <label for="firstName">Input your firstname: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
-            <input type="text" name="firstName" id="firstName" class="validate" value="{$firstName}" />
-            <i id="firstNameError" class="errorStyle">{$firstNameError}</i><br />
-            <label for="lastName">Input your lastname:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
-            <input type="text" name="lastName" id="lastName" class="validate" value="{$lastName}" />
-            <i id="lastNameError" class="errorStyle">{$lastNameError}</i><br />
-            <label for="login">Input your login:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            <input type="text" name="login" id="login" class="validate" value="{$login}" />
-            <i id="loginError" class="errorStyle">{$loginError}</i><br />
-            <label for="password">Input your password:&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            <input type="password" name="password" id="password" class="validate" />
-            <i id="passwordError" class="errorStyle">{$passwordError}</i><br />
-            <label for="retypePassword">Retype your password:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            <input type="password" name="retypePassword" id="retypePassword" class="validate" />
-            <i id="retypePasswordError" class="errorStyle">{$retypePasswordError}</i><br />
-            <label for="email">Input your e-Mail:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-            <input type="text" name="email" id="email" value="{$email}" class="validate" />
-            <i id="emailError" class="errorStyle">{$emailError}</i><br />
-            <label for="male">Select your gender: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Male</label>
-            <input type="radio" name="sex" id="male" value="male" checked="checked" />
-            <label for="female">Female</label>
-            <input type="radio" name="sex" id="female" value="female" /><br />
-            <label for="popupDatepicker">Input your date of birth here:</label>
-            <input type="text" name="dateOfBirth" id="dateOfBirth"  value="{$dateOfBirth}" />
-            <i id="dateOfBirthError" class="errorStyle">{$dateOfBirthError}</i><br />
-            <label for="avatar">Select an avatar:&nbsp; </label>
-            <input type="file" name="avatar" id="avatar" value="{$avatar}" />
-            <i id="avatarError" class="errorStyle">{$avatarError}</i><br />
-            <input type="submit" name="submit" id="submit" value="Send" />
+    <div id="page_content">
+        <form action="processData.php" method="post" enctype="multipart/form-data" name="addNews" id="addNews">
+            <div class="field_set">
+                <div class="add_news_label">
+                    <label for="category">Categoria:</label>
+                </div>
+                <div id="category_field">
+                    <select name="category" id="category" >
+                        <option value=""></option>
+                        <option value="new_category">Categorie noua...</option>
+                        <option value="new_category2">Categorie noua 2...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field_set">
+                <div class="add_news_label">
+                    <label for="title">Titlu:</label>
+                </div>
+                <div id="title_field">
+                    <textarea name="title" id="title" cols="90">
+                    </textarea>
+                </div>
+            </div>
+            <div class="field_set">
+                <div class="add_news_label">
+                    <label for="content">Continut:</label>
+                </div>
+                <div id="content_field">
+                    <textarea name="content" id="content" cols="90" rows="20">
+                    </textarea>
+                </div>
+            </div>
+            <div class="field_set">
+                <div class="add_news_label">
+                    <label for="photo">Adauga o poza:</label>
+                </div>
+                <div id="photo_field">
+                    <input type="file" name="photo" id="photo" />
+                </div>
+            </div>
+            <div class="field_set">
+                <div class="add_news_label">
+                    <label for="submit">&nbsp;</label>
+                </div>
+                <div id="submit_field">
+                    <input type="submit" name="submit" id="submit" value="Adauga" />
+                </div>
+            </div>
         </form>
     </div>
     <div id="footer">

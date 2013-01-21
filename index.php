@@ -18,7 +18,7 @@
             <div class="menu_cell"><a href="#">Acasa</a> </div>
             <div class="menu_cell"><a href="#">Acasa</a> </div>
             <div class="menu_cell"><a href="#">Acasa</a> </div>
-            <div class="menu_cell"><a href="#">Acasa</a> </div>
+            <div class="menu_cell"><a href="addNews.php">Adauga o stire</a> </div>
         </div>
         <div id="content">
             <h1>Index</h1>

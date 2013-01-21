@@ -78,6 +78,18 @@ class DataBase
         }
     }
 
+    public function getCategoryList()
+    {
+        try {
+            $query = $this->dbh->query('SELECT *
+                FROM Category');
+            return $query->fetch();
+        }
+        catch (PDOException $e){
+            $this->setError($e->getMessage(), 'Can not get news...');
+        }
+    }
+
     public function getLastNews()
     {
         try {
@@ -157,7 +169,7 @@ class DataBase
         try {
             $query = $this->dbh->prepare('INSERT INTO Category(category_name)
                 VALUES(category_name)');
-            $query->bindParam(':category_name', $_POST['category_name']);
+            $query->bindParam(':category_name', $_POST['category']);
             $query->execute();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not insert category...');
@@ -183,7 +195,7 @@ class DataBase
     {
         try {
             $ext = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
-            $photo = "photo/" . ($_POST['category']) . '_' . $_POST['title']) . '_' . time() . "." . $ext;
+            $photo = "photo/" . $_POST['category'] . '_' . $_POST['title'] . '_' . time() . "." . $ext;
 
             $query = $this->dbh->prepare('INSERT INTO Photo(news_id, photo)' .
                 'VALUES(:news_id, :photo)');
