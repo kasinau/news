@@ -22,3 +22,5 @@ $db->insertNews($category_id);
 $news_id = $db->getID();
 
 $db->insertPhoto($news_id);
+
+header('Location: addNews.php');

@@ -1,3 +1,11 @@
+<?php
+require_once 'class/config.php';
+
+$db = DataBase::getInstance();
+
+$categories = $db->getCategoryList();
+$news = $db->getLastNews();
+?>
 <html>
 <head>
     <title>News</title>
@@ -10,30 +18,34 @@
         </div>
         <div id="menu_bar">
             <div class="menu_cell"><a href="index.php">Acasa</a> </div>
-            <div class="menu_cell"><a href="social.php">Social</a> </div>
-            <div class="menu_cell"><a href="#">Acasa</a> </div>
-            <div class="menu_cell"><a href="#">Acasa</a> </div>
-            <div class="menu_cell"><a href="#">Acasa</a> </div>
-            <div class="menu_cell"><a href="#">Acasa</a> </div>
-            <div class="menu_cell"><a href="#">Acasa</a> </div>
-            <div class="menu_cell"><a href="#">Acasa</a> </div>
-            <div class="menu_cell"><a href="#">Acasa</a> </div>
+            <?php foreach ($categories as $category) { ?>
+            <div class="menu_cell">
+                <a href="getNews.php?category_id=<?php echo $category['category_id'] ?>">
+                    <?php echo $category['category_name'] ?>
+                </a>
+            </div>
+            <?php } ?>
             <div class="menu_cell"><a href="addNews.php">Adauga o stire</a> </div>
         </div>
         <div id="content">
-            <h1>Index</h1>
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
-            Here will be the content...<br />
+            <?php foreach ($news as $news_item) { ?>
+            <div class="news_item">
+                <a href="getNews.php?category_id=<?php echo $news_item['category_id'] ?>&news_id=<?php echo $news_item['category_id'] ?>">
+                    <div class="news_item_title">
+                        <h2><?php echo$news_item['title'] ?></h2>
+                    </div>
+                </a>
+                <div class="news_item_img">
+                    <img src="<?php echo $news_item['photo']?>" width="100px" />
+                </div>
+                <div class="news_item_text">
+                    <?php echo $news_item['content']?>
+                </div>
+            </div>
+            <hr />
+            <br />
+            <?php } ?>
+            &nbsp;
         </div>
         <div id="footer">
             Here will be the footer content...

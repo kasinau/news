@@ -1,3 +1,10 @@
+<?php
+require_once 'class/config.php';
+
+$db = DataBase::getInstance();
+
+$categories = $db->getCategoryList();
+?>
 <html>
 <head>
     <title>News</title>
@@ -12,14 +19,13 @@
     </div>
     <div id="menu_bar">
         <div class="menu_cell"><a href="index.php">Acasa</a> </div>
-        <div class="menu_cell"><a href="social.php">Social</a> </div>
-        <div class="menu_cell"><a href="#">Acasa</a> </div>
-        <div class="menu_cell"><a href="#">Acasa</a> </div>
-        <div class="menu_cell"><a href="#">Acasa</a> </div>
-        <div class="menu_cell"><a href="#">Acasa</a> </div>
-        <div class="menu_cell"><a href="#">Acasa</a> </div>
-        <div class="menu_cell"><a href="#">Acasa</a> </div>
-        <div class="menu_cell"><a href="#">Acasa</a> </div>
+        <?php foreach ($categories as $category) { ?>
+        <div class="menu_cell">
+            <a href="getNews.php?category_id=<?php echo $category['category_id'] ?>">
+                <?php echo $category['category_name'] ?>
+            </a>
+        </div>
+        <?php } ?>
         <div class="menu_cell"><a href="addNews.php">Adauga o stire</a> </div>
     </div>
     <div id="page_content">
@@ -31,6 +37,9 @@
                 <div id="category_field">
                     <select name="category" id="category" >
                         <option value=""></option>
+                        <?php foreach ($categories as $category) { ?>
+                            <option value="<?php echo $category['category_id']?>"><?php echo $category['category_name']?></option>
+                        <?php } ?>
                         <option value="new_category">Categorie noua...</option>
                         <option value="new_category2">Categorie noua 2...</option>
                     </select>

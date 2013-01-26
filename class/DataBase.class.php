@@ -52,7 +52,8 @@ class DataBase
     {
         try {
             $query = $this->dbh->query('SELECT LAST_INSERT_ID();');
-            return $query->fetch();
+            $result = $query->fetch();
+            return $result['LAST_INSERT_ID()'];
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not get the ID...');
         }
@@ -83,7 +84,7 @@ class DataBase
         try {
             $query = $this->dbh->query('SELECT *
                 FROM Category');
-            return $query->fetch();
+            return $query->fetchAll();
         }
         catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not get news...');
@@ -94,11 +95,13 @@ class DataBase
     {
         try {
             $query = $this->dbh->query('SELECT *
-                FROM News, Photo
-                WHERE News.news_id = Photo.news_id
+                FROM News, Photo, Category
+                WHERE
+                  News.news_id = Photo.news_id
+                  AND Category.category_id = News.category_id
                 ORDER BY date
                 LIMIT 10');
-            return $query->fetch();
+            return $query->fetchAll();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not get the ID...');
         }
@@ -109,7 +112,7 @@ class DataBase
         try {
             $query = $this->dbh->prepare('SELECT *
                 FROM News, Category, Photo
-                WHERE news_id = :news_id
+                WHERE News.news_id = :news_id
                     AND News.category_id = Category.category_id
                     AND News.news_id = Photo.news_id');
             $query->bindParam(':news_id', $id);
@@ -117,6 +120,7 @@ class DataBase
             return $query->fetch();
         }
         catch (PDOException $e){
+            echo $e->getMessage(); die;
             $this->setError($e->getMessage(), 'Can not get news...');
         }
     }
@@ -131,7 +135,7 @@ class DataBase
                 ORDER BY date');
             $query->bindParam(':category_id', $id);
             $query->execute();
-            return $query->fetch();
+            return $query->fetchAll();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not get news...');
         }
@@ -167,8 +171,8 @@ class DataBase
     public function insertCategory()
     {
         try {
-            $query = $this->dbh->prepare('INSERT INTO Category(category_name)
-                VALUES(category_name)');
+            $query = $this->dbh->prepare('INSERT INTO Category(category_name)' .
+                'VALUES(:category_name)');
             $query->bindParam(':category_name', $_POST['category']);
             $query->execute();
         } catch (PDOException $e){
@@ -179,12 +183,11 @@ class DataBase
     public function insertNews($category_id)
     {
         try {
-            $query = $this->dbh->prepare('INSERT INTO News(category_id, title, content, date)
-                VALUES(:category_id, :title, :content, :date)');
+            $query = $this->dbh->prepare('INSERT INTO News(category_id, title, content)
+                VALUES(:category_id, :title, :content)');
             $query->bindParam(':category_id', $category_id);
             $query->bindParam(':title', $_POST['title']);
             $query->bindParam(':content', $_POST['content']);
-            $query->bindParam(':date', $this->getDate());
             $query->execute();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not insert treaty...');
@@ -195,7 +198,8 @@ class DataBase
     {
         try {
             $ext = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
-            $photo = "photo/" . $_POST['category'] . '_' . $_POST['title'] . '_' . time() . "." . $ext;
+  //          $photo = "photo/" . $_POST['category'] . '_' . $_POST['title'] . '_' . time() . "." . $ext;
+            $photo = "photo/" . time() . "." . $ext;
 
             $query = $this->dbh->prepare('INSERT INTO Photo(news_id, photo)' .
                 'VALUES(:news_id, :photo)');
@@ -208,11 +212,6 @@ class DataBase
         catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not insert photo...please, try again later...');
         }
-    }
-
-    public function getDate()
-    {
-        return 1;
     }
 
     public function setError($error, $errorMessage = '')

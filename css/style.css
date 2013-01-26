@@ -62,3 +62,35 @@ body
     width: 150px;
     float: left;
 }
+.news_item
+{
+    padding: 10px;
+    width: 880px;
+    float: left;
+}
+.news_item_title
+{
+    padding: 2px;
+}
+.news_item_img
+{
+    padding: 2px;
+    float: left;
+}
+.news_item_text
+{
+    padding: 2px;
+    float: left;
+    width: 700px;
+    height: 94px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.news_img
+{
+    float: left;
+}
+.news_text
+{
+    float: left;
+}
