@@ -52,6 +52,7 @@ body
 #title_field{}
 #content_field{}
 #file_field{}
+#uploaded_file_field{}
 #submit_field{}
 .field_set
 {
@@ -89,6 +90,8 @@ body
 .news_img
 {
     float: left;
+    width: 210px;
+    padding: 5px;
 }
 .news_text
 {

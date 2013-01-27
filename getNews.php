@@ -35,19 +35,24 @@ if (isset($_GET['news_id']) && (!empty($_GET['news_id']))) {
     </div>
     <div id="content">
         <?php if (isset($_GET['news_id']) && (!empty($_GET['news_id']))) { ?>
-            <div class="news_item_title">
-                <h2><?php echo $news_item['title'] ?></h2>
-            </div>
-            <div class="news_img">
-                <img align="top" src="<?php echo $news_item['photo'] ?>" width="200px">
-            </div>
-            <div class="news_text">
+            <div class="news_item">
+                <div class="news_item_title">
+                    <h2><?php echo $news_item['title'] ?></h2>
+                </div>
+                <img align="left" src="<?php echo $news_item['photo'] ?>" width="400px" style="margin-right: 10px; margin-bottom: 10px" ">
                 <?php echo $news_item['content'] ?>
+                <br />
+                <a href="editNews.php?news_id=<?php echo $_GET['news_id'] ?>">
+                    <button>Edit news...</button>
+                </a>
+                <a href="deleteNews.php?news_id=<?php echo $_GET['news_id'] ?>">
+                    <button>Delete news...</button>
+                </a>
             </div>
         <?php } else { ?>
         <?php foreach ($newsByCategory as $news_item) { ?>
             <div class="news_item">
-                <a href="#">
+                <a href="getNews.php?category_id=<?php echo $news_item['category_id'] ?>&news_id=<?php echo $news_item['news_id'] ?>">
                     <div class="news_item_title">
                         <h2><?php echo$news_item['title'] ?></h2>
                     </div>

@@ -30,7 +30,7 @@ $news = $db->getLastNews();
         <div id="content">
             <?php foreach ($news as $news_item) { ?>
             <div class="news_item">
-                <a href="getNews.php?category_id=<?php echo $news_item['category_id'] ?>&news_id=<?php echo $news_item['category_id'] ?>">
+                <a href="getNews.php?category_id=<?php echo $news_item['category_id'] ?>&news_id=<?php echo $news_item['news_id'] ?>">
                     <div class="news_item_title">
                         <h2><?php echo$news_item['title'] ?></h2>
                     </div>
