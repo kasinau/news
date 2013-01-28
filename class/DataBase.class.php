@@ -183,8 +183,8 @@ class DataBase
     public function insertNews($category_id)
     {
         try {
-            $query = $this->dbh->prepare('INSERT INTO News(category_id, title, content)
-                VALUES(:category_id, :title, :content)');
+            $query = $this->dbh->prepare('INSERT INTO News(category_id, title, content)' .
+                'VALUES(:category_id, :title, :content)');
             $query->bindParam(':category_id', $category_id);
             $query->bindParam(':title', $_POST['title']);
             $query->bindParam(':content', $_POST['content']);
@@ -198,7 +198,7 @@ class DataBase
     {
         try {
             $ext = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
-  //          $photo = "photo/" . $_POST['category'] . '_' . $_POST['title'] . '_' . time() . "." . $ext;
+            //          $photo = "photo/" . $_POST['category'] . '_' . $_POST['title'] . '_' . time() . "." . $ext;
             $photo = "photo/" . time() . "." . $ext;
 
             $query = $this->dbh->prepare('INSERT INTO Photo(news_id, photo)' .
@@ -208,6 +208,43 @@ class DataBase
             $query->execute();
             move_uploaded_file($_FILES["photo"]["tmp_name"], $photo);
             return true;
+        }
+        catch (PDOException $e){
+            $this->setError($e->getMessage(), 'Can not insert photo...please, try again later...');
+        }
+    }
+
+    public function updateNews($category_id, $news_id)
+    {
+        try {
+            $query = $this->dbh->prepare('UPDATE News SET category_id=:category_id, ' .
+                ' title=:title, content=:content WHERE news_id=:news_id');
+            $query->bindParam(':category_id', $category_id);
+            $query->bindParam(':title', $_POST['title']);
+            $query->bindParam(':content', $_POST['content']);
+            $query->bindParam(':news_id', $news_id);
+            $query->execute();
+        } catch (PDOException $e){
+            $this->setError($e->getMessage(), 'Can not insert treaty...');
+        }
+    }
+
+    public function updatePhoto($news_id)
+    {
+        try {
+            if (!empty($_FILES["photo"]) && $_FILES["photo"]["size"]!=0) {
+                unlink($_POST['old_photo']);
+                $ext = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
+                $photo = "photo/" . time() . "." . $ext;
+
+                $query = $this->dbh->prepare('UPDATE Photo SET photo=:photo' .
+                    'WHERE news_id=:news_id');
+                $query->bindParam(':news_id', $news_id);
+                $query->bindParam(':photo', $photo);
+                $query->execute();
+                move_uploaded_file($_FILES["photo"]["tmp_name"], $photo);
+                return true;
+            }
         }
         catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not insert photo...please, try again later...');

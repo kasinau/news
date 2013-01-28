@@ -31,7 +31,8 @@ $news_item = $db->getNewsByID($_GET['news_id']);
         <div class="menu_cell"><a href="addNews.php">Adauga o stire</a> </div>
     </div>
     <div id="page_content">
-        <form action="processData.php" method="post" enctype="multipart/form-data" name="addNews" id="addNews">
+        <form action="updateData.php" method="post" enctype="multipart/form-data" name="editNews" id="editNews">
+            <input type="hidden" name="news_id" value="<?php echo $news_item['news_id'] ?>" />
             <div class="field_set">
                 <div class="add_news_label">
                     <label for="category">Categoria:</label>
@@ -76,10 +77,11 @@ $news_item = $db->getNewsByID($_GET['news_id']);
             </div>
             <div class="field_set">
                 <div class="add_news_label">
-                    <label for="photo">Adauga o poza:</label>
+                    <label for="photo">Schimba poza:</label>
                 </div>
                 <div id="photo_field">
                     <input type="file" name="photo" id="photo" />
+                    <input type="hidden" name="old_photo" value="<?php echo $news_item['photo'] ?>" />
                 </div>
             </div>
             <div class="field_set">
@@ -87,7 +89,7 @@ $news_item = $db->getNewsByID($_GET['news_id']);
                     <label for="submit">&nbsp;</label>
                 </div>
                 <div id="submit_field">
-                    <input type="submit" name="submit" id="submit" value="Adauga" />
+                    <input type="submit" name="submit" id="submit" value="Editeaza" />
                 </div>
             </div>
         </form>
