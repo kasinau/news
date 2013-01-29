@@ -160,11 +160,12 @@ class DataBase
     public function getUser()
     {
         try {
-            $query = $this->dbh->prepare('call getUser(:username, :password)');
+            $query = $this->dbh->prepare('SELECT * FROM users ' .
+                ' WHERE username=:username AND password=:password');
             $query->bindParam(':username', $_POST['username']);
             $query->bindParam(':password', md5($_POST['password']));
             $query->execute();
-            return $query;
+            return $query->fetch();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not get the user...');
         }
@@ -174,9 +175,11 @@ class DataBase
     public function insertUser()
     {
         try {
-            $query = $this->dbh->prepare('call insertUser(:username, :password)');
-            $query->bindParam(':username', $_POST['username']);
-            $query->bindParam(':password', md5($_POST['password']));
+            $query = $this->dbh->prepare('INSERT INTO users(username, password, status) ' .
+                'VALUES("admin", :password, "admin")');
+ //           $query->bindParam(':username', 'admin');
+            $query->bindParam(':password', md5('1491625'));
+ //           $query->bindParam(':status', 'admin');
             $query->execute();
         } catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not insert the user...');

@@ -7,6 +7,9 @@
  */
 
 require_once 'class/config.php';
+session_start();
+if (!isset($_SESSION) || $_SESSION['status'] != 'admin')
+    header("Location: index.php");
 
 $db = DataBase::getInstance();
 

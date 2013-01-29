@@ -21,6 +21,29 @@ body
     margin: auto;
     height: 100px;
 }
+.header_content
+{
+    width: 750px;
+    height: 100px;
+    float: left;
+}
+.header_login
+{
+    width: 150px;
+    height: 100px;
+    float: left;
+}
+.header_login input
+{
+    width: 70px;
+    height: 20px;
+}
+.header_login label
+{
+    width: 70px;
+    height: 20px;
+    font-size: 10pt ;
+}
 #menu_bar
 {
     width: 900px;
