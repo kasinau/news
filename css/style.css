@@ -11,20 +11,20 @@ body
 {
     width: 900px;
     height: auto;
-    background: #add8e6;
+    background: #f7fcff;
     margin: auto;
 }
 #header
 {
     width: 900px;
-    background: yellow;
+    background: #6c97f5;
     margin: auto;
     height: 100px;
 }
 #menu_bar
 {
     width: 900px;
-    background: #db7093;
+    background:  #d3dae8;
     margin: auto;
     height: 40px;
 }
@@ -39,12 +39,12 @@ body
 {
     width: 900px;
     height: auto;
-    background: #adff2f;
+    background: #f7fcff;
 }
 #footer
 {
     width: 900px;
-    background: #7fffd4;
+    background: #6c97f5;
     margin: auto;
     height: 50px;
 }
