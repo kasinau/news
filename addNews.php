@@ -41,7 +41,6 @@ $categories = $db->getCategoryList();
                             <option value="<?php echo $category['category_id']?>"><?php echo $category['category_name']?></option>
                         <?php } ?>
                         <option value="new_category">Categorie noua...</option>
-                        <option value="new_category2">Categorie noua 2...</option>
                     </select>
                 </div>
             </div>

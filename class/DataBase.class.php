@@ -125,6 +125,22 @@ class DataBase
         }
     }
 
+    public function getPhotoByNewsID($id)
+    {
+        try {
+            $query = $this->dbh->prepare('SELECT *
+                FROM Photo
+                WHERE news_id = :news_id');
+            $query->bindParam(':news_id', $id);
+            $query->execute();
+            return $query->fetch();
+        }
+        catch (PDOException $e){
+            echo $e->getMessage(); die;
+            $this->setError($e->getMessage(), 'Can not get news...');
+        }
+    }
+
     public function getNewsByCategoryID($id)
     {
         try {
@@ -233,14 +249,15 @@ class DataBase
     {
         try {
             if (!empty($_FILES["photo"]) && $_FILES["photo"]["size"]!=0) {
-                unlink($_POST['old_photo']);
+                if (file_exists($_POST['old_photo']))
+                    unlink($_POST['old_photo']);
                 $ext = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
                 $photo = "photo/" . time() . "." . $ext;
 
-                $query = $this->dbh->prepare('UPDATE Photo SET photo=:photo' .
-                    'WHERE news_id=:news_id');
-                $query->bindParam(':news_id', $news_id);
+                $query = $this->dbh->prepare('UPDATE Photo SET photo = :photo ' .
+                    'WHERE news_id = :news_id');
                 $query->bindParam(':photo', $photo);
+                $query->bindParam(':news_id', $news_id);
                 $query->execute();
                 move_uploaded_file($_FILES["photo"]["tmp_name"], $photo);
                 return true;
@@ -248,6 +265,33 @@ class DataBase
         }
         catch (PDOException $e){
             $this->setError($e->getMessage(), 'Can not insert photo...please, try again later...');
+        }
+    }
+
+    public function deleteNews($news_id)
+    {
+        try {
+            $query = $this->dbh->prepare('DELETE FROM News WHERE news_id=:news_id');
+            $query->bindParam(':news_id', $news_id);
+            $query->execute();
+        } catch (PDOException $e){
+            $this->setError($e->getMessage(), 'Can not delete news...');
+        }
+    }
+
+    public function deletePhoto($news_id, $photo)
+    {
+        try {
+            if (file_exists($photo))
+                unlink($photo);
+
+            $query = $this->dbh->prepare('DELETE FROM Photo WHERE news_id = :news_id');
+            $query->bindParam(':news_id', $news_id);
+            $query->execute();
+            return true;
+        }
+        catch (PDOException $e){
+            $this->setError($e->getMessage(), 'Can not delete photo...please, try again later...');
         }
     }
 
