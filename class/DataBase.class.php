@@ -22,7 +22,7 @@ class DataBase
     private $db_server, $connection = null, $dbh;
     public $result;
     private static $instance = null;
-    private $user = 'root', $password = 'root', $dsn = "mysql:dbname=news;host=127.0.0.1";
+    private $user = 'root', $password = '', $dsn = "mysql:dbname=news;host=127.0.0.1";
 
     private function __construct()
     {

@@ -93,7 +93,7 @@ if (isset($_GET['news_id']) && (!empty($_GET['news_id']))) {
         &nbsp;
     </div>
     <div id="footer">
-        Here will be the footer content...
+        &copy; 2013, Inga Jora
     </div>
 </div>
 </body>

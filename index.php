@@ -68,7 +68,7 @@ $news = $db->getLastNews();
             &nbsp;
         </div>
         <div id="footer">
-            Here will be the footer content...
+            &copy; 2013, Inga Jora
         </div>
     </div>
 </body>

@@ -114,7 +114,7 @@ $news_item = $db->getNewsByID($_GET['news_id']);
         </form>
     </div>
     <div id="footer">
-        Here will be the footer content...
+        &copy; 2013, Inga Jora
     </div>
 </div>
 </body>
